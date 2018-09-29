@@ -1,5 +1,5 @@
 /*********************************************************************************
-*  WEB322 – Assignment 1
+*  WEB322 – Assignment 2
 *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  
 *  No part of this assignment has been copied manually or electronically from any other source
 *  (including web sites) or distributed to other students.
@@ -12,8 +12,11 @@
 
 var HTTP_PORT = process.env.PORT || 8081;
 var express = require("express");
-var app = express();
 var path = require("path");
+var data = require("data-service.js")
+var employees = require("/data/employees.json")
+var departments = require("/data/departments.json")
+var app = express();
 
 app.use(express.static('public'));
 
@@ -24,6 +27,10 @@ app.get("/", (req, res) => {
 
 app.get("/about", (req, res) => {
    res.sendFile(path.join(__dirname, "/views/about.html"));
+});
+
+app.get("/employees", (req, res) => {
+    res.send(res.json(employees));
 });
 
 app.listen(HTTP_PORT);
