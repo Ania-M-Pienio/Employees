@@ -13,9 +13,9 @@
 var HTTP_PORT = process.env.PORT || 8081;
 var express = require("express");
 var path = require("path");
-var dataService = require("data-service.js")
-//var employees = require("/data/employees.json")
-//var departments = require("/data/departments.json")
+//var dataService = require("./data-service")
+var employees = require("./data/employees")
+//var departments = require("./data/departments")
 var app = express();
 
 app.use(express.static('public'));
@@ -30,7 +30,7 @@ app.get("/about", (req, res) => {
 });
 
 app.get("/employees", (req, res) => {
-    
+    res.json(employees);    
 });
 
 app.listen(HTTP_PORT);
