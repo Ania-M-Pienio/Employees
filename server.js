@@ -15,7 +15,7 @@ var express = require("express");
 var path = require("path");
 //var dataService = require("./data-service")
 var employees = require("./data/employees")
-//var departments = require("./data/departments")
+var departments = require("./data/departments")
 var app = express();
 
 app.use(express.static('public'));
@@ -31,6 +31,10 @@ app.get("/about", (req, res) => {
 
 app.get("/employees", (req, res) => {
     res.json(employees);    
+});
+
+app.get("/employees", (req, res) => {
+    res.json(departments);    
 });
 
 app.listen(HTTP_PORT);
