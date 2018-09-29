@@ -10,19 +10,17 @@
 *
 ********************************************************************************/ 
 
-var HTTP_PORT = process.env.PORT || 8081;
-var express = require("express");
-var path = require("path");
-//var dataService = require("./data-service")
-var employees = require("./data/employees")
-var departments = require("./data/departments")
-var app = express();
+const HTTP_PORT = process.env.PORT || 8081;
+const express = require("express");
+const path = require("path");
+var dataService = require("./data-service")
+const app = express();
 
 app.use(express.static('public'));
 
 app.get("/", (req, res) => {
     console.log("Express http server listening on " + HTTP_PORT);
-    res.sendFile(path.join(__dirname, "/views/home.html"));
+    res.sendFile(path.join(__dirname, "/views/home.html"));   
 });
 
 app.get("/about", (req, res) => {
@@ -30,21 +28,41 @@ app.get("/about", (req, res) => {
 });
 
 app.get("/employees", (req, res) => {
-    res.json(employees);    
+    dataService.getAllEmployees().then((employees)=> {
+        res.json(employees);
+    }).catch((NoResults)=>{
+        res.json({message: NoResults}); 
+    });
 });
 
 app.get("/departments", (req, res) => {
-    res.json(departments);    
+    dataService.getDepartments().then((departments)=> {
+        res.json(departments);
+    }).catch((NoResults)=>{
+        res.json({message: NoResults});   
+    });    
 });
 
 app.get("/managers", (req, res) => {
-    res.send("TODO: get all employees who have isManager==true");    
+    console.log("inside /managers");
+    dataService.getManagers().then((managers)=> {
+        res.json(managers);
+    }).catch((NoResults)=>{
+        res.json({message: NoResults});
+    });        
 });
 
-
-// 404 error
-app.use((req, res) => {
+/*
+// 404 error //
+app.use((req, res)=>{
     res.status(404).sendFile(path.join(__dirname, "/views/error.html")) 
 });
+*/
 
-app.listen(HTTP_PORT);
+dataService.initialize().then((MsgOk)=>{
+    console.log(MsgOk);
+    app.listen(HTTP_PORT);
+
+}).catch((MsgNoGo)=>{
+    console.log(MsgNoGo);
+});
