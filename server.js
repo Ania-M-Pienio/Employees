@@ -42,5 +42,9 @@ app.get("/managers", (req, res) => {
 });
 
 
+// 404 error
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(__dirname, "/views/error.html")) 
+});
 
 app.listen(HTTP_PORT);
