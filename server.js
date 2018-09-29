@@ -33,8 +33,10 @@ app.get("/employees", (req, res) => {
     res.json(employees);    
 });
 
-app.get("/employees", (req, res) => {
+app.get("/departments", (req, res) => {
     res.json(departments);    
 });
+
+
 
 app.listen(HTTP_PORT);
