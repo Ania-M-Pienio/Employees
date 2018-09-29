@@ -37,6 +37,10 @@ app.get("/departments", (req, res) => {
     res.json(departments);    
 });
 
+app.get("/managers", (req, res) => {
+    res.send("TODO: get all employees who have isManager==true");    
+});
+
 
 
 app.listen(HTTP_PORT);
