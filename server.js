@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/about", (req, res) => {
-    console.log("Express http server listening on" + HTTP_PORT);
+    //console.log("Express http server listening on" + HTTP_PORT);
     res.sendFile(path.join(__dirname, "/views/about.html"));
 });
 
