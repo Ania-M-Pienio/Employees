@@ -17,11 +17,16 @@ var express = require("express");
 var app = express();
 var path = require("path");
 
+app.use(express.static('public'));
 
 app.get("/", (req, res) => {
+    //console.log("Express http server listening on" + HTTP_PORT);
+    res.sendFile(path.join(__dirname, "/views/home.html"));
+});
+
+app.get("/about", (req, res) => {
     console.log("Express http server listening on" + HTTP_PORT);
     res.sendFile(path.join(__dirname, "/views/about.html"));
 });
-
 
 app.listen(HTTP_PORT);
