@@ -18,7 +18,7 @@ var path = require("path");
 app.use(express.static('public'));
 
 app.get("/", (req, res) => {
-    console.log("Express http server listening on" + HTTP_PORT);
+    console.log("Express http server listening on " + HTTP_PORT);
     res.sendFile(path.join(__dirname, "/views/home.html"));
 });
 
