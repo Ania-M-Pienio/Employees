@@ -6,7 +6,7 @@
 * 
 *  Name: Ania M. Pienio  Student ID: 041780073 Date: September 29, 2018
 *
-*  
+*  Online (Heroku) Link:   https://salty-dawn-92326.herokuapp.com/
 *
 ********************************************************************************/ 
 
@@ -64,4 +64,3 @@ dataService.initialize().then((MsgOk)=>{
 }).catch((MsgNoGo)=>{
     console.log(MsgNoGo);
 });
-
