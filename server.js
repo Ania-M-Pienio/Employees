@@ -52,17 +52,16 @@ app.get("/managers", (req, res) => {
     });        
 });
 
-/*
 // 404 error //
-app.use((req, res)=>{
+app.get("*", (req, res)=>{
     res.status(404).sendFile(path.join(__dirname, "/views/error.html")) 
 });
-*/
 
 dataService.initialize().then((MsgOk)=>{
     console.log(MsgOk);
     app.listen(HTTP_PORT);
-
+    
 }).catch((MsgNoGo)=>{
     console.log(MsgNoGo);
 });
+
