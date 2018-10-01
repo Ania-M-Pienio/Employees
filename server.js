@@ -44,7 +44,6 @@ app.get("/departments", (req, res) => {
 });
 
 app.get("/managers", (req, res) => {
-    console.log("inside /managers");
     dataService.getManagers().then((managers)=> {
         res.json(managers);
     }).catch((NoResults)=>{
