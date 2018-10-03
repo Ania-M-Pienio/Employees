@@ -52,7 +52,7 @@ app.get("/managers", (req, res) => {
 });
 
 // 404 error //
-app.get("*", (req, res)=>{
+app.all("*", (req, res)=>{
     res.status(404).sendFile(path.join(__dirname, "/views/error.html")) 
 });
 
