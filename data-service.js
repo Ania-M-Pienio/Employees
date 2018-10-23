@@ -39,7 +39,7 @@ return new Promise(function (resolve, reject) {
                if (err) {
                    reject("unable to read file");
                } else { // else2
-                let dataJS = JSON.parse(data);
+                let dataJS = JSON.parse(data2);
                 for (let i = 0; i < dataJS.length; i++) {
                     departments.push(dataJS[i]);
                 }                
