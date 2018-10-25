@@ -96,3 +96,86 @@ module.exports.getManagers = function() {
         }        
     });
 }
+
+//addEmployees() 
+module.exports.addEmployee = function(employeeData) {
+    return new Promise ((resolve, reject) => {
+        if (!employeeData.isManager) {
+            employeeData.isManager = false;
+        }
+        employeeData.employeeNum = employees.length + 1;
+        employees.push(employeeData);
+        resolve(); 
+    });
+}
+
+// getEmployeesByStatus
+module.exports.getEmployeesByStatus = function(status) {
+    return new Promise ((resolve, reject) => {
+        let results = [];
+        for (let i = 0; i < employees.length; i++) {
+           if (employees[i].status == status) {
+                results.push(employees[i]);                
+            }
+        }
+        if (results.length > 0) {
+            resolve(results);
+        } else {
+            reject("no results found");
+        }
+    });
+
+}
+
+// getEmployeesByDepartment
+module.exports.getEmployeesByDepartment = function(department) {
+    return new Promise ((resolve, reject) => {
+        let results = [];
+        for (let i = 0; i < employees.length; i++) {
+            if (employees[i].department == department) {
+                results.push(employees[i]);
+            }
+        }
+        if (results.length > 0) {
+            resolve(results);
+        } else {
+            reject("no results found");
+        }
+    });    
+}
+
+
+// getEmployeesByManager
+module.exports.getEmployeesByManager = function(manager) {
+    return new Promise ((resolve, reject) => {
+        let results = [];
+        for (let i = 0; i < employees.length; i++) {
+            if (employees[i].employeeManagerNum == manager) {
+                results.push(employees[i]);
+            }
+        }
+        if (results.length > 0) {
+            resolve(results);
+        } else {
+            reject("no results found");
+        }
+    });     
+}
+
+// getEmployeesByNum
+module.exports.getEmployeeByNum = function(num) {
+    return new Promise ((resolve, reject) => {
+        let results;
+        for (let i = 0; i < employees.length; i++) {
+            if (employees[i].employeeNum == num) {
+                results = employees[i];
+                break;
+            }
+        }
+        if (results) {
+            resolve(results);
+        } else {
+            reject("no results found");
+        }
+    });      
+}
