@@ -1,5 +1,5 @@
 /*********************************************************************************
-*  WEB322 – Assignment 3
+*  WEB322 – Assignment 03
 *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  
 *  No part of this assignment has been copied manually or electronically from any other source
 *  (including web sites) or distributed to other students.
@@ -48,10 +48,10 @@ app.get("/employees/add", (req, res) => {
  });
 
 app.get("/employees/:status?/:department?/:manager?", (req, res) => {
-    // if status
     const STATUS = req.query.status;
     const DEPARTMENT = req.query.department;
     const MANAGER = req.query.manager;
+    // if status
     if (STATUS) {
         dataService.getEmployeesByStatus(STATUS).then((employeesByStatus) => {
             res.json(employeesByStatus);
