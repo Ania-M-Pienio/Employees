@@ -6,7 +6,7 @@
 * 
 *  Name: Ania M. Pienio  Student ID: 041780073 Date: October 26, 2018
 *
-*  Online (Heroku) Link:  
+*  Online (Heroku) Link:  https://git.heroku.com/salty-dawn-92326.git
 *
 ********************************************************************************/ 
 
