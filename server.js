@@ -18,6 +18,10 @@ const app = express();
 const multer = require("multer");
 const fs = require("fs");
 const bodyParser = require("body-parser");
+const exphbs = require("express-handlebars");
+
+app.engine('.hbs', exphbs({ extname: '.hbs', defaultLayout: "main" }));
+app.set('view engine', '.hbs');
 
 app.use(express.static('public'));
 
@@ -25,7 +29,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.get("/", (req, res) => {
     console.log("Express http server listening on " + HTTP_PORT);
-    res.sendFile(path.join(__dirname, "/views/home.html"));   
+    res.render("home", {defaultLayout: true});   
 });
 
 app.get("/about", (req, res) => {
