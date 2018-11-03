@@ -33,15 +33,15 @@ app.get("/", (req, res) => {
 });
 
 app.get("/about", (req, res) => {
-   res.sendFile(path.join(__dirname, "/views/about.html"));
+    res.render("about", {defaultLayout: true});   
 });
 
 app.get("/employees/add", (req, res) => {
-    res.sendFile(path.join(__dirname, "/views/addEmployee.html"));
+    res.render("addEmployee", {defaultLayout: true});   
  });
 
  app.get("/images/add", (req, res) => {
-    res.sendFile(path.join(__dirname, "/views/addImage.html"));
+    res.render("addImage", {defaultLayout: true});
  });
 
  app.get("/images", (req, res) => {
