@@ -20,12 +20,30 @@ const fs = require("fs");
 const bodyParser = require("body-parser");
 const exphbs = require("express-handlebars");
 
-app.engine('.hbs', exphbs({ extname: '.hbs', defaultLayout: "main" }));
+
+app.engine('.hbs', exphbs({ 
+    extname: '.hbs', 
+    defaultLayout: "main",
+    helpers: {
+        navLink: function(url, options){
+            return '<li' +
+            ((url == app.locals.activeRoute) ? ' class="active" ' : '') +
+            '><a href="' + url + '">' + options.fn(this) + '</a></li>';
+        }
+    }
+}));
+
 app.set('view engine', '.hbs');
 
 app.use(express.static('public'));
 
 app.use(bodyParser.urlencoded({extended: true}));
+
+app.use(function(req,res,next){
+    let route = req.baseUrl + req.path;
+    app.locals.activeRoute = (route == "/") ? "/" : route.replace(/\/$/, "");
+    next();
+    });
 
 app.get("/", (req, res) => {
     console.log("Express http server listening on " + HTTP_PORT);
@@ -104,14 +122,6 @@ app.get("/departments", (req, res) => {
     }).catch((NoResults) => {
         res.json({message: NoResults});   
     });    
-});
-
-app.get("/managers", (req, res) => {
-    dataService.getManagers().then((managers)=> {
-        res.json(managers);
-    }).catch((NoResults) => {
-        res.json({message: NoResults});
-    });        
 });
 
 const storage = multer.diskStorage( {
