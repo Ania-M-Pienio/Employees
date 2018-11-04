@@ -177,3 +177,33 @@ module.exports.getEmployeeByNum = function(num) {
         }
     });      
 }
+
+// updateEmployee
+module.exports.updateEmployee = function(employeeData) {
+    return new Promise ((resolve, reject) => {
+        for (let i = 0; i < employees.length; i++) {
+            if (employees[i].employeeNum == employeeData.employeeNum) {
+                    employees[i].firstName = employeeData.firstName;
+                    employees[i].lastName = employeeData.lastName;
+                    employees[i].email = employeeData.email;
+                    employees[i].addressStreet = employeeData.addressStreet;
+                    employees[i].addressState = employeeData.addressState;
+                    employees[i].addressPostal = employeeData.addressPostal;
+                    if (!employeeData.isManager) {
+                        employees[i].isManager = false;
+                    } else {
+                        employees[i].isManager = true;
+                    }
+                    if (!employeeData.employeeManagerNum) {
+                        employees[i].employeeManagerNum = null;
+                    } else {
+                        employees[i].employeeManagerNum = employeeData.employeeManagerNum;
+                    }
+                    employee[i].status = employeeData.status;
+                    employee[i].department = employeeData.department;
+                    employee[i].hireDate = employeeData.hireDate;            
+        }
+    }
+
+    });
+}

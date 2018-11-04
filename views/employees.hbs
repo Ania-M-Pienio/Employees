@@ -21,7 +21,7 @@
                 {{#each data}}
                 <tr>
                         <td>{{employeeNum}}</td>
-                        <td><a href="/employees/{{employeeNum}}">{{firstName}} {{lastName}}</a></td>
+                        <td><a href="/employee/{{employeeNum}}">{{firstName}} {{lastName}}</a></td>
                         <td><a href="mailto:{{email}}"> {{email}} </a></td>
                         <td>{{addressStreet}} {{addressCity}} {{addressState}} {{addressPostal}}</td>
                         {{#if this.employeeManagerNum}}

@@ -144,9 +144,12 @@ app.get("/employees/:status?/:department?/:manager?", (req, res) => {
 
 app.get("/employee/:value", (req, res) => {
     dataService.getEmployeeByNum(req.params.value).then((employee) => {
-       res.json({value: employee});
+        res.render("employee", {
+            employee: employee,
+            defaultLayout: true
+        });
     }).catch((NoResults) => {
-        res.render("employees", {
+        res.render("employee", {
             message: NoResults,
             defaultLayout: true
         }); 
@@ -175,6 +178,12 @@ const storage = multer.diskStorage( {
     }
 });
 const upload = multer({storage: storage});
+
+
+app.post("/employee/update", (req, res) => {
+    console.log(req.body);
+    res.redirect("/employees");
+});
 
 app.post("/images/add", upload.single("imageFile"), (req, res) => {
     res.redirect("/images");
