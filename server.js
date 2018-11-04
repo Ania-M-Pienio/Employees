@@ -29,6 +29,15 @@ app.engine('.hbs', exphbs({
             return '<li' +
             ((url == app.locals.activeRoute) ? ' class="active" ' : '') +
             '><a href="' + url + '">' + options.fn(this) + '</a></li>';
+        },
+        equal: function (lvalue, rvalue, options) {
+            if (arguments.length < 3)
+            throw new Error("Handlebars Helper equal needs 2 parameters");
+            if (lvalue != rvalue) {
+            return options.inverse(this);
+            } else {
+            return options.fn(this);
+            }
         }
     }
 }));
@@ -64,8 +73,10 @@ app.get("/employees/add", (req, res) => {
 
  app.get("/images", (req, res) => {
      fs.readdir("./public/images/uploaded", (err, items) => {
-     //console.log(items);
-     res.json(items);
+         res.render("images", {
+             data: items,
+             defaultLayout: true
+            });         
      });
  });
 
@@ -76,51 +87,87 @@ app.get("/employees/:status?/:department?/:manager?", (req, res) => {
     // if status
     if (STATUS) {
         dataService.getEmployeesByStatus(STATUS).then((employeesByStatus) => {
-            res.json(employeesByStatus);
+            res.render("employees", {
+                data: employeesByStatus,
+                defaultLayout: true
+               });            
         }).catch((NoResults) => {
-            res.json({message: NoResults})
+            res.render("employees",{
+                message: NoResults,
+                defaultLayout: true
+            });
         });
     }         
     /////// if department
     else if (DEPARTMENT) {  
         dataService.getEmployeesByDepartment(DEPARTMENT).then((employeesByDepartment) => {
-            res.json(employeesByDepartment);
+            res.render("employees", {
+                data: employeesByDepartment,
+                defaultLayout: true
+               });          
         }).catch((NoResults) => {
-            res.json({message: NoResults})
+            res.render("employees",{
+                message: NoResults,
+                defaultLayout: true
+            });
         });
     }
     //////// if manager 
     else if (MANAGER) {        
         dataService.getEmployeesByManager(MANAGER).then((employeesByManager) => {
-            res.json(employeesByManager);
+            res.render("employees", { 
+                data: employeesByManager,               
+                defaultLayout: true
+               });    
         }).catch((NoResults) => {
-            res.json({message: NoResults}) 
-        });        
+            res.render("employees",{
+                message: NoResults,
+                defaultLayout: true
+            });
+        });
     } 
     else {
    //////// no query - all employees
     dataService.getAllEmployees().then((employees)=> {
-        res.json(employees);
-    }).catch((NoResults) => {
-        res.json({message: NoResults}); 
+        res.render("employees", {
+            data: employees,
+            defaultLayout: true
+           }); 
+       }).catch((NoResults) => {
+        res.render("employees", {
+            message: NoResults,
+            defaultLayout: true
+        }); 
     });
     }
 });
 
 app.get("/employee/:value", (req, res) => {
     dataService.getEmployeeByNum(req.params.value).then((employee) => {
-        console.log(req.params.value);
-        res.json({value: employee});
+        res.render("employee", {
+            employee: employee,
+            defaultLayout: true
+        });
     }).catch((NoResults) => {
-        res.json({message: NoResults}) 
+        res.render("employee", {
+            message: NoResults,
+            defaultLayout: true
+        }); 
     });
 });
 
 app.get("/departments", (req, res) => {
     dataService.getDepartments().then((departments)=> {
-        res.json(departments);
+        res.render("departments", {
+            data: departments,
+            defaultLayout: true
+        });
+        //res.json(departments);
     }).catch((NoResults) => {
-        res.json({message: NoResults});   
+        res.json("departments", {
+            message: NoResults,
+            defaultLayout: true
+        });   
     });    
 });
 
@@ -131,6 +178,12 @@ const storage = multer.diskStorage( {
     }
 });
 const upload = multer({storage: storage});
+
+
+app.post("/employee/update", (req, res) => {
+    console.log(req.body);
+    res.redirect("/employees");
+});
 
 app.post("/images/add", upload.single("imageFile"), (req, res) => {
     res.redirect("/images");
