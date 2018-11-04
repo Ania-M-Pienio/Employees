@@ -73,8 +73,12 @@ app.get("/employees/add", (req, res) => {
 
  app.get("/images", (req, res) => {
      fs.readdir("./public/images/uploaded", (err, items) => {
-     //console.log(items);
-     res.json(items);
+         console.log(items);
+         res.render("images", {
+             data: items,
+             defaultLayout: true
+            }); 
+         //res.json(items);   
      });
  });
 
