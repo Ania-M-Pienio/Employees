@@ -155,9 +155,16 @@ app.get("/employee/:value", (req, res) => {
 
 app.get("/departments", (req, res) => {
     dataService.getDepartments().then((departments)=> {
-        res.json(departments);
+        res.render("departments", {
+            data: departments,
+            defaultLayout: true
+        });
+        //res.json(departments);
     }).catch((NoResults) => {
-        res.json({message: NoResults});   
+        res.json("departments", {
+            message: NoResults,
+            defaultLayout: true
+        });   
     });    
 });
 
