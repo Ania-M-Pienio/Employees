@@ -1,8 +1,6 @@
 let employees = [];
 let departments = [];
 let managers = [];
-
-
 const fs = require('fs');
 /*
 

@@ -73,12 +73,10 @@ app.get("/employees/add", (req, res) => {
 
  app.get("/images", (req, res) => {
      fs.readdir("./public/images/uploaded", (err, items) => {
-         console.log(items);
          res.render("images", {
              data: items,
              defaultLayout: true
-            }); 
-         //res.json(items);   
+            });         
      });
  });
 
@@ -89,43 +87,69 @@ app.get("/employees/:status?/:department?/:manager?", (req, res) => {
     // if status
     if (STATUS) {
         dataService.getEmployeesByStatus(STATUS).then((employeesByStatus) => {
-            res.json(employeesByStatus);
+            res.render("employees", {
+                data: employeesByStatus,
+                defaultLayout: true
+               });            
         }).catch((NoResults) => {
-            res.json({message: NoResults})
+            res.render("employees",{
+                message: NoResults,
+                defaultLayout: true
+            });
         });
     }         
     /////// if department
     else if (DEPARTMENT) {  
         dataService.getEmployeesByDepartment(DEPARTMENT).then((employeesByDepartment) => {
-            res.json(employeesByDepartment);
+            res.render("employees", {
+                data: employeesByDepartment,
+                defaultLayout: true
+               });          
         }).catch((NoResults) => {
-            res.json({message: NoResults})
+            res.render("employees",{
+                message: NoResults,
+                defaultLayout: true
+            });
         });
     }
     //////// if manager 
     else if (MANAGER) {        
         dataService.getEmployeesByManager(MANAGER).then((employeesByManager) => {
-            res.json(employeesByManager);
+            res.render("employees", { 
+                data: employeesByManager,               
+                defaultLayout: true
+               });    
         }).catch((NoResults) => {
-            res.json({message: NoResults}) 
-        });        
+            res.render("employees",{
+                message: NoResults,
+                defaultLayout: true
+            });
+        });
     } 
     else {
    //////// no query - all employees
     dataService.getAllEmployees().then((employees)=> {
-        res.json(employees);
-    }).catch((NoResults) => {
-        res.json({message: NoResults}); 
+        res.render("employees", {
+            data: employees,
+            defaultLayout: true
+           }); 
+       }).catch((NoResults) => {
+        res.render("employees", {
+            message: NoResults,
+            defaultLayout: true
+        }); 
     });
     }
 });
 
 app.get("/employee/:value", (req, res) => {
     dataService.getEmployeeByNum(req.params.value).then((employee) => {
-        console.log(req.params.value);
-        res.json({value: employee});
+       res.json({value: employee});
     }).catch((NoResults) => {
-        res.json({message: NoResults}) 
+        res.render("employees", {
+            message: NoResults,
+            defaultLayout: true
+        }); 
     });
 });
 
