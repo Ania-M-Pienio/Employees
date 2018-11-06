@@ -2,6 +2,7 @@ let employees = [];
 let departments = [];
 let managers = [];
 const fs = require('fs');
+let editNum = "";
 /*
 
     Read files  
@@ -162,6 +163,7 @@ module.exports.getEmployeesByManager = function(manager) {
 
 // getEmployeesByNum
 module.exports.getEmployeeByNum = function(num) {
+    editNum = num; // stores which employeeNum is being currently recalled (for use if employee is edited)
     return new Promise ((resolve, reject) => {
         let results;
         for (let i = 0; i < employees.length; i++) {
@@ -182,7 +184,8 @@ module.exports.getEmployeeByNum = function(num) {
 module.exports.updateEmployee = function(employeeData) {
     return new Promise ((resolve, reject) => {
         for (let i = 0; i < employees.length; i++) {
-            if (employees[i].employeeNum == employeeData.employeeNum) {
+            if (employees[i].employeeNum == editNum) {
+                    console.log(employees[i].employeeNum);             
                     employees[i].firstName = employeeData.firstName;
                     employees[i].lastName = employeeData.lastName;
                     employees[i].email = employeeData.email;
@@ -199,11 +202,12 @@ module.exports.updateEmployee = function(employeeData) {
                     } else {
                         employees[i].employeeManagerNum = employeeData.employeeManagerNum;
                     }
-                    employee[i].status = employeeData.status;
-                    employee[i].department = employeeData.department;
-                    employee[i].hireDate = employeeData.hireDate;            
+                    employees[i].status = employeeData.status;
+                    employees[i].department = employeeData.department;
+                    employees[i].hireDate = employeeData.hireDate;            
         }
     }
+    resolve();
 
     });
 }
