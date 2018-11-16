@@ -19,15 +19,6 @@ const multer = require("multer");
 const fs = require("fs");
 const bodyParser = require("body-parser");
 const exphbs = require("express-handlebars");
-const Sequelize = require("sequelize");
-var sequelize = new Sequelize("d5ev5hqmr5ct5a", "ujeibmbnulivdy", "ad6b5d384415c26a40c1ed381ca9ed9b44cb25ca0eac59e616e55b678da6a31a", {
-    host: "ec2-54-235-193-0.compute-1.amazonaws.com",
-    dialect: "postgres",
-    port: 5432,
-    dialectOptions: {
-        ssl:true
-    }
-});
 
 
 
@@ -94,7 +85,7 @@ app.get("/employees/:status?/:department?/:manager?", (req, res) => {
     const STATUS = req.query.status;
     const DEPARTMENT = req.query.department;
     const MANAGER = req.query.manager;
-    // if status
+    ////// if status
     if (STATUS) {
         dataService.getEmployeesByStatus(STATUS).then((employeesByStatus) => {
             res.render("employees", {
@@ -139,17 +130,25 @@ app.get("/employees/:status?/:department?/:manager?", (req, res) => {
     else {
    //////// no query - all employees
     dataService.getAllEmployees().then((employees)=> {
-        res.render("employees", {
-            data: employees,
-            defaultLayout: true
-           }); 
-       }).catch((NoResults) => {
-        res.render("employees", {
-            message: NoResults,
-            defaultLayout: true
-        }); 
-    });
-    }
+        console.log("Promise Returned Successfully!");
+        if (employees.length > 0) {
+            res.render("employees", {
+                data: employees,
+                defaultLayout: true
+            }); 
+        } else {
+            res.render("employees", {
+                message: "no results"
+            }); 
+        } 
+        }).catch((NoResults) => { // "no results returned"
+        console.log("Promise now in Rejection!");
+            res.render("employees", {
+                message: NoResults,
+                defaultLayout: true
+            }); 
+        });    
+    }    
 });
 
 app.get("/employee/:value", (req, res) => {
@@ -169,13 +168,18 @@ app.get("/employee/:value", (req, res) => {
 
 app.get("/departments", (req, res) => {
     dataService.getDepartments().then((departments)=> {
-        res.render("departments", {
-            data: departments,
-            defaultLayout: true
-        });
-        //res.json(departments);
+       if (departments.length > 0) {
+            res.render("departments", {
+                data: departments,
+                defaultLayout: true
+            });
+        } else {
+            res.render("departments", {
+                message: "no results"
+            });
+        }   
     }).catch((NoResults) => {
-        res.json("departments", {
+        res.render("departments", {
             message: NoResults,
             defaultLayout: true
         });   

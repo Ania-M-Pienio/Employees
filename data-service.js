@@ -1,14 +1,29 @@
 
-let editNum = "";
+// global variable that informs us of which object we are updating 
+//[[ set by getEmployeeByNum and used in updateEmployee ]]
+let editNum = ""; 
 
-var sequelize = new Sequelize("d5ev5hqmr5ct5a", "ujeibmbnulivdy", "ad6b5d384415c26a40c1ed381ca9ed9b44cb25ca0eac59e616e55b678da6a31a", {
+const Sequelize = require("sequelize");
+
+var sequelize = new Sequelize("d5ev5hqmr5ct5a", "ujeibmbnulivdy", 
+"ad6b5d384415c26a40c1ed381ca9ed9b44cb25ca0eac59e616e55b678da6a31a", {
     host: "ec2-54-235-193-0.compute-1.amazonaws.com",
     dialect: "postgres",
     port: 5432,
     dialectOptions: {
         ssl:true
-    }
+    },
+    operatorsAliases: false
 });
+
+sequelize
+    .authenticate()
+    .then(function() {
+        console.log("Connection has been established successfully");
+    })
+    .catch(function(err) {
+        console.log("Unable to connect to the database:", err);
+    });
 
 var Employee = sequelize.define("Employee", {
     employeeNum: {
@@ -22,6 +37,7 @@ var Employee = sequelize.define("Employee", {
     SSN: Sequelize.STRING,
     addressStreet: Sequelize.STRING,
     addressCity: Sequelize.STRING,
+    addressState: Sequelize.STRING,
     addressPostal: Sequelize.STRING,
     maritalStatus: Sequelize.STRING,
     isManager:  Sequelize.BOOLEAN,
@@ -42,8 +58,8 @@ var Department = sequelize.define("Department", {
 Department.hasMany(Employee, {foreignKey: 'department'});
 
 
-/*
 
+/* ////////////////////////////////////////////////////////////////////////////////
     Read files  
         fs.readFile('filename', function() {});
     Create files 
@@ -59,80 +75,203 @@ Department.hasMany(Employee, {foreignKey: 'department'});
         fs.rename('filename', 'newFilename', function(){});
 
     open flags 'w' = writing
-
-*/
+*//////////////////////////////////////////////////////////////////////////////
 
 // Initialize() - reads ./data/employees.json
 module.exports.initialize = function() {   
     return new Promise(function (resolve, reject) {
-        reject();
-});
-
+        sequelize.sync()
+        .then(()=> {
+            resolve("database is a go");
+        }).catch(() => {
+            reject("unable to sync the database");
+        });
+    });
 } // end of initialize
 
 
-
-//getAllEmployees()
+//getAllEmployees() ** REVISED DB **** A5
 module.exports.getAllEmployees = function() {
     return new Promise(function (resolve, reject) {
-        reject();
+        sequelize.sync()
+        .then(()=> {
+            Employee.findAll()
+            .then((employees) => {
+                resolve(employees);
+            }).catch(() => {
+                reject("no results returned");
+            }); 
+        }).catch(() => {
+            console.log("something went wrong");
+        });
     });
 }
 
-//getDepartments()
+//getDepartments() ** REVISED DB **** A5 
 module.exports.getDepartments = function() {
     return new Promise(function (resolve, reject) {
-        reject();
-    });
-}
-
-//getManagers() 
-module.exports.getManagers = function() {
-    return new Promise(function (resolve, reject) {
-        reject();
+        sequelize.sync()
+        .then(()=> {
+            Department.findAll().then((departments) => {
+                resolve(departments);
+            }).catch(() => {
+                reject("no results returned");
+            });
+        }).catch(() => {
+            console.log("something went wrong");
+        });
     });
 }
 
 //addEmployees() 
 module.exports.addEmployee = function(employeeData) {
+    employeeData.isManager = (employeeData.isManager)? true : false; // ensures that even empty data (i.e. "") is in boolean terms
+    for (let property in employeeData ) { // ensures that legitimately empty fields are "null"
+        if (property == "") {
+            property = null;
+        }
+    }
     return new Promise(function (resolve, reject) {
-        reject();
-    });
+        sequelize.sync()
+        .then(()=> {
+            Employee.create({
+                firstName: employeeData.firstName,
+                lastName: employeeData.lastName,
+                email: employeeData.email,
+                SSN: employeeData.SSN,
+                addressStreet: employeeData.addressStreet,
+                addressCity: employeeData.addressCity,
+                addressState: employeeData.addressState,
+                addressPostal: employeeData.addressPostal,
+                maritalStatus: employeeData.maritalStatus,
+                isManager:  employeeData.isManager,
+                employeeManagerNum: employeeData.employeeManagerNum,
+                status: employeeData.status,
+                hireDate: employeeData.hireDate
+            }).then(() => {            
+                resolve("employee created sucessfully");
+            }).catch(() => {
+                reject("unable to create employee");
+            });        
+        }).catch(() => {
+            console.log("something went wrong");
+        }); 
+    });   
 }
 
-// getEmployeesByStatus
+// getEmployeesByStatus ** REVISED DB **** A5
 module.exports.getEmployeesByStatus = function(status) {
     return new Promise(function (resolve, reject) {
-        reject();
+        sequelize.sync()
+        .then(()=> {
+            Employee.findAll({
+                where: {
+                    status: status
+                }
+            }).then((employees) => {
+                resolve(employees);
+            }).catch(() => {
+                reject("no results returned");
+            });
+        });
     });
 }
 
-// getEmployeesByDepartment
+// getEmployeesByDepartment ** REVISED DB **** A5
 module.exports.getEmployeesByDepartment = function(department) {
     return new Promise(function (resolve, reject) {
-        reject();
+        sequelize.sync()
+        .then(()=> {
+            Employee.findAll({
+                where: {
+                    department: department
+                }
+            }).then((employees) => {
+                resolve(employees);
+            }).catch(() => {
+                reject("no results returned");
+            });
+        }).catch(() => {
+            console.log("something went wrong");       
+        });
     });   
 }
 
 
-// getEmployeesByManager
+// getEmployeesByManager ** REVISED DB **** A5
 module.exports.getEmployeesByManager = function(manager) {
     return new Promise(function (resolve, reject) {
-        reject();
+        sequelize.sync()
+        .then(()=> {
+            Employee.findAll({
+                where: {
+                    employeeManagerNum: manager
+                }
+            }).then((employees) => {
+                resolve(employees);
+            }).catch(() => {
+                reject("no results returned");
+            });
+        }).catch(() => {
+            console.log("something went wrong");    
+        });
     });
 }
 
-// getEmployeesByNum
+// getEmployeesByNum ** REVISED DB **** A5
 module.exports.getEmployeeByNum = function(num) {
     editNum = num; // stores which employeeNum is being currently recalled (for use if employee is edited)
     return new Promise(function (resolve, reject) {
-        reject();
+        sequelize.sync()
+        .then(()=> {
+            Employee.findAll({ // implies limit 1
+                where: {
+                    employeeNum: editNum
+                }
+            }).then((employee) => {
+                resolve(employee);
+            }).catch(() => {
+                reject("no results returned");
+            });
+        }).catch(() => {
+            console.log("something went wrong");    
+        });
     });
 }
 
-// updateEmployee
+// updateEmployee ** REVISED DB **** A5
 module.exports.updateEmployee = function(employeeData) {
+    employeeData.isManager = (employeeData.isManager) ? true : false; // ensures that even empty data (i.e. "") is in boolean terms
+    for (let property in employeeData ) { // ensures that legitimately empty fields are "null"
+        if (property == "") {
+            property = null;
+        }
+    }
     return new Promise(function (resolve, reject) {
-        reject();
-    });
-}
+        sequelize.sync()
+        .then(() => {
+            Employee.update({
+                firstName: employeeData.firstName,
+                lastName: employeeData.lastName,
+                email: employeeData.email,
+                SSN: employeeData.SSN,
+                addressStreet: employeeData.addressStreet,
+                addressCity: employeeData.addressCity,
+                addressPostal: employeeData.addressPostal,
+                maritalStatus: employeeData.maritalStatus,
+                isManager:  employeeData.isManager,
+                employeeManagerNum: employeeData.employeeManagerNum,
+                status: employeeData.status,
+                hireDate: employeeData.hireDate
+                }, {
+                where: {employeeNum: editNum}     
+            }).then(() => {
+                resolve("employee updated sucessfully");
+            }).catch(() => {
+                reject("unable to update employee");
+            });
+        }).catch(() => {
+        console.log("something went wrong");    
+        });
+    }); 
+}   
