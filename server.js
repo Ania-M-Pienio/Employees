@@ -47,19 +47,23 @@ app.use(express.static('public'));
 
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.use(function(req,res,next){
+app.use(function(req, res, next){
     let route = req.baseUrl + req.path;
     app.locals.activeRoute = (route == "/") ? "/" : route.replace(/\/$/, "");
     next();
-    });
+});
 
 app.get("/", (req, res) => {
     console.log("Express http server listening on " + HTTP_PORT);
-    res.render("home", {defaultLayout: true});   
+    res.render("home", {
+        defaultLayout: true
+    });   
 });
 
 app.get("/about", (req, res) => {
-    res.render("about", {defaultLayout: true});   
+    res.render("about", {
+        defaultLayout: true
+    });   
 });
 
 app.get("/employees/add", (req, res) => {
@@ -76,7 +80,9 @@ app.get("/employees/add", (req, res) => {
  });
 
  app.get("/images/add", (req, res) => {
-    res.render("addImage", {defaultLayout: true});
+    res.render("addImage", {
+        defaultLayout: true
+    });
  });
 
  app.get("/images", (req, res) => {
@@ -284,20 +290,22 @@ add.post("/department/update", (req, res) => {
     dataService.updateDepartment(req.body).then(() => {
         console.log(req.body);
         res.redirect("/departments");
+    }).catch(() => {
+        res.status(500).send("Unable to Update Department");
     });
 });
+
 
 // 404 error //
 app.all("*", (req, res)=>{
     res.status(404).sendFile(path.join(__dirname, "/views/error.html")); 
 });
 
+
 dataService.initialize()
-    .then((MsgOk)=>{
-        console.log(MsgOk);
-        app.listen(HTTP_PORT);
-    
-    }).catch((MsgNoGo)=>{
+.then((MsgOk)=>{
+    console.log(MsgOk);
+    app.listen(HTTP_PORT);    
+}).catch((MsgNoGo) => {
     console.log(MsgNoGo);
-    });
 });
