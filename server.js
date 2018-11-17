@@ -63,7 +63,16 @@ app.get("/about", (req, res) => {
 });
 
 app.get("/employees/add", (req, res) => {
-    res.render("addEmployee", {defaultLayout: true});   
+    dataService.getDepartmentById().then((departments) => {
+        res.render("addEmployee", {
+            data: departments,
+            defaultLayout: true
+        }); 
+    }).catch(() => {
+        res.render("addEmployee", {
+            message: [],
+            defaultLayout: true
+    });
  });
 
  app.get("/images/add", (req, res) => {
@@ -150,17 +159,35 @@ app.get("/employees/:status?/:department?/:manager?", (req, res) => {
 });
 
 app.get("/employee/:value", (req, res) => {
-    dataService.getEmployeeByNum(req.params.value).then((employee) => {
-        res.render("employee", {            
-            employee: employee,
-            defaultLayout: true
-        });
-        
-    }).catch((NoResults) => {
-        res.render("employee", {
-            message: NoResults,
-            defaultLayout: true
-        }); 
+    let viewData = {};
+    dataService.getEmployeeByNum(req.params.empNum).then((employee) => {
+        if (employee) {
+            viewData.employee = employee; //store employee data in the "viewData" object as "employee"
+        } else {
+            viewData.employee = null; // set employee to null if none were returned
+        }
+    }).catch(() => {
+        viewData.employee = null; // set employee to null if there was an error
+    }).then(dataService.getDepartments).then((department) => {
+            viewData.departments = department; // store department data in the "viewData" object as "departments"
+
+            // loop through viewData.departments and once we have found the departmentId that matches
+            // the employee's "department" value, add a "selected" property to the matching
+            // viewData.departments object
+
+            for (let i = 0; i < viewData.departments.length; i++) {
+                if (viewData.departments[i].departmentId == viewData.employee.department) {
+                    viewData.departments[i].selected = true;
+                }
+            }
+    }).catch(() => {
+            viewData.departments = []; // set departments to empty if there was an error
+    }).then(() => {
+            if (viewData.employee == null) { // if no employee - return an error
+                res.status(404).send("Employee Not Found");
+        } else {
+            res.render("employee", { viewData: viewData }); // render the "employee" view
+        }
     });
 });
 
@@ -213,6 +240,14 @@ app.get("/departments/delete/:departmentId", (req, res) => {
     });
 });
 
+app.get("/employees/delete/:value", (req, res) => {
+    dataService.deleteEmployeeByNum(req.params.value).then(() => {
+        res.redirect("/employees");          
+    }).catch(() => {
+        res.status(500).send("Unable to Remove Employee / Employee not found");
+    });
+});
+
 const storage = multer.diskStorage( {
     destination: "./public/images/uploaded",
     filename: function (req, file, cb) {
@@ -254,13 +289,15 @@ add.post("/department/update", (req, res) => {
 
 // 404 error //
 app.all("*", (req, res)=>{
-    res.status(404).sendFile(path.join(__dirname, "/views/error.html")) 
+    res.status(404).sendFile(path.join(__dirname, "/views/error.html")); 
 });
 
-dataService.initialize().then((MsgOk)=>{
-    console.log(MsgOk);
-    app.listen(HTTP_PORT);
+dataService.initialize()
+    .then((MsgOk)=>{
+        console.log(MsgOk);
+        app.listen(HTTP_PORT);
     
-}).catch((MsgNoGo)=>{
+    }).catch((MsgNoGo)=>{
     console.log(MsgNoGo);
+    });
 });

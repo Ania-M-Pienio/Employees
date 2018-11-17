@@ -35,6 +35,7 @@
                         <td><a href="/employees?status={{status}}">{{status}}</a></td>
                         <td><a href="/employees?department={{department}}">{{department}}</a></td>
                         <td>{{hireDate}}</td>
+                        <td><a href="/employeees/delete/{{employeeNum}}" class="btn btn-danger">Remove</a></td>
                 </tr>
                {{/each}}
                 </tbody>
@@ -46,5 +47,4 @@
         <strong>{{message}}</strong>
     </div>
     {{/unless}}
-
 </div>

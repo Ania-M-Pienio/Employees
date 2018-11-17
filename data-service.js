@@ -370,3 +370,24 @@ module.exports.deleteDepartmentById = function(num) {
         });
     });
 }
+
+// deleteEmployeeByNum 
+module.exports.deleteEmployeeByNum = function(num) {
+    editNum = num; // stores which departent is being currently recalled (for use if employee is edited)
+    return new Promise(function (resolve, reject) {
+        sequelize.sync()
+        .then(()=> {
+            Employee.destroy({
+                where: {
+                    employeeNum: num
+                }
+            }).then(() => {
+                resolve("employee was deleted successfully");
+            }).catch(() => {
+                reject("unable to delete employee");
+            });
+        }).catch(() => {
+            console.log("something went wrong");    
+        });
+    });
+}
