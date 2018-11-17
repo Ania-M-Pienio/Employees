@@ -20,8 +20,6 @@ const fs = require("fs");
 const bodyParser = require("body-parser");
 const exphbs = require("express-handlebars");
 
-
-
 app.engine('.hbs', exphbs({ 
     extname: '.hbs', 
     defaultLayout: "main",
@@ -186,6 +184,35 @@ app.get("/departments", (req, res) => {
     });    
 });
 
+app.get("/departments/add", (req, res) => {
+    res.render("addDepartment", {
+        defaultLayout: true
+    });
+});
+
+app.get("/department/:departmentId", (req, res) => {
+    dataService.getDepartmentById(req.params.departmentId).then((department) => {
+        if (department) {
+            res.render("departments", {            
+                data: department,
+                defaultLayout: true
+            });
+        } else {
+            res.status(404).send("Department Not Found");
+        }        
+    }).catch((NoResults) => {
+       res.status(404).send("Department Not Found");
+    }); 
+});
+
+app.get("/departments/delete/:departmentId", (req, res) => {
+    dataService.deleteDepartmentById(req.param.departmentId).then(() => {
+        res.redirect("/departments");
+    }).catch(() => {
+        res.status(500).send("Unable to Remove Department / Department not found");
+    });
+});
+
 const storage = multer.diskStorage( {
     destination: "./public/images/uploaded",
     filename: function (req, file, cb) {
@@ -209,6 +236,19 @@ app.post("/images/add", upload.single("imageFile"), (req, res) => {
 app.post("/employees/add", (req, res) => {
     dataService.addEmployee(req.body).then(() => {
         res.redirect("/employees");
+    });
+});
+
+app.post("/departments/add", (req, res) => {
+    dataService.addDepartment(req.body).then(() => {
+        res.redirect("/departments");
+    });
+});
+
+add.post("/department/update", (req, res) => {
+    dataService.updateDepartment(req.body).then(() => {
+        console.log(req.body);
+        res.redirect("/departments");
     });
 });
 

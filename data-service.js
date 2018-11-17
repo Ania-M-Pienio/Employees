@@ -112,7 +112,8 @@ module.exports.getDepartments = function() {
     return new Promise(function (resolve, reject) {
         sequelize.sync()
         .then(()=> {
-            Department.findAll().then((departments) => {
+            Department.findAll()
+            .then((departments) => {
                 resolve(departments);
             }).catch(() => {
                 reject("no results returned");
@@ -226,7 +227,7 @@ module.exports.getEmployeeByNum = function(num) {
         .then(()=> {
             Employee.findAll({ // implies limit 1
                 where: {
-                    employeeNum: editNum
+                    employeeNum: num
                 }
             }).then((employee) => {
                 resolve(employee);
@@ -274,4 +275,98 @@ module.exports.updateEmployee = function(employeeData) {
         console.log("something went wrong");    
         });
     }); 
-}   
+} 
+
+// addDepartment ** NEW **** A5
+module.exports.addDepartment = function(department) {
+    department.isManager = (department.isManager) ? true : false; // ensures that even empty data (i.e. "") is in boolean terms
+    for (let property in department ) { // ensures that legitimately empty fields are "null"
+        if (property == "") {
+            property = null;
+        }
+    }
+    return new Promise(function (resolve, reject) {
+        sequelize.sync()
+        .then(() => {
+            Department.create({
+                departmentName: department.departmentName
+            }).then(() => {
+                resolve("department created sucessfully");
+            }).catch(() => {
+                reject("unable to create department");      
+            });
+        }).catch(() => {
+            console.log("something went wrong");
+        }); 
+    });
+}
+
+// updateDepartment ** NEW **** A5
+module.exports.updateDepartment = function(department) {
+    department.isManager = (department.isManager) ? true : false; // ensures that even empty data (i.e. "") is in boolean terms
+    for (let property in department ) { // ensures that legitimately empty fields are "null"
+        if (property == "") {
+            property = null;
+        }
+    }
+    return new Promise(function (resolve, reject) {
+        sequelize.sync()
+        .then(() => {
+            Department.update({
+                departmentName: department.departmentName
+            }, {
+                where: {
+                    departmentId: department.departmentId
+                }
+            }).then(() => {
+                resolve("department updated sucessfully");
+            }).catch(() => {
+                reject("unable to update department");      
+            });
+        }).catch(() => {
+            console.log("something went wrong");
+        }); 
+    });
+}
+
+// getDepartmentByID ** NEW **** A5
+module.exports.getDepartmentById = function(num) {
+    editNum = num; // stores which departent is being currently recalled (for use if employee is edited)
+    return new Promise(function (resolve, reject) {
+        sequelize.sync()
+        .then(()=> {
+            Department.findAll({
+                where: {
+                    departmentId: num
+                }
+            }).then((department) => {
+                resolve(department);
+            }).catch(() => {
+                reject("no results returned");
+            });
+        }).catch(() => {
+            console.log("something went wrong");    
+        });
+    });
+}
+
+// deleteDepartmentById ** NEW **** A5
+module.exports.deleteDepartmentById = function(num) {
+    editNum = num; // stores which departent is being currently recalled (for use if employee is edited)
+    return new Promise(function (resolve, reject) {
+        sequelize.sync()
+        .then(()=> {
+            Department.destroy({
+                where: {
+                    departmentId: num
+                }
+            }).then(() => {
+                resolve("department was deleted successfully");
+            }).catch(() => {
+                reject("unable to delete department");
+            });
+        }).catch(() => {
+            console.log("something went wrong");    
+        });
+    });
+}
