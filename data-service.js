@@ -2,6 +2,7 @@
 // global variable that informs us of which object we are updating 
 //[[ set by getEmployeeByNum and used in updateEmployee ]]
 let editNum = ""; 
+let editDep = "";
 
 const Sequelize = require("sequelize");
 
@@ -16,6 +17,7 @@ var sequelize = new Sequelize("d5ev5hqmr5ct5a", "ujeibmbnulivdy",
     operatorsAliases: false
 });
 
+/*
 sequelize
     .authenticate()
     .then(function() {
@@ -24,6 +26,7 @@ sequelize
     .catch(function(err) {
         console.log("Unable to connect to the database:", err);
     });
+*/
 
 var Employee = sequelize.define("Employee", {
     employeeNum: {
@@ -77,7 +80,7 @@ Department.hasMany(Employee, {foreignKey: 'department'});
     open flags 'w' = writing
 *//////////////////////////////////////////////////////////////////////////////
 
-// Initialize() - reads ./data/employees.json
+// Initialize() - 
 module.exports.initialize = function() {   
     return new Promise(function (resolve, reject) {
         sequelize.sync()
@@ -92,6 +95,7 @@ module.exports.initialize = function() {
 
 //getAllEmployees() ** REVISED DB **** A5
 module.exports.getAllEmployees = function() {
+    console.log("%%%%%%%%  Called getAllEmployees()  %%%%%%%%%%");
     return new Promise(function (resolve, reject) {
         sequelize.sync()
         .then(()=> {
@@ -109,6 +113,7 @@ module.exports.getAllEmployees = function() {
 
 //getDepartments() ** REVISED DB **** A5 
 module.exports.getDepartments = function() {
+    console.log("%%%%%%%%  Called getDepartments()  %%%%%%%%%%");
     return new Promise(function (resolve, reject) {
         sequelize.sync()
         .then(()=> {
@@ -124,17 +129,20 @@ module.exports.getDepartments = function() {
     });
 }
 
-//addEmployees() 
+//addEmployee() 
 module.exports.addEmployee = function(employeeData) {
-    employeeData.isManager = (employeeData.isManager)? true : false; // ensures that even empty data (i.e. "") is in boolean terms
-    for (let property in employeeData ) { // ensures that legitimately empty fields are "null"
-        if (property == "") {
-            property = null;
-        }
-    }
+    console.log(" ++++++++++++  Called AddEmployee() wiht department = :" + employeeData.department + "     +++++++++++");
+   employeeData.isManager = (employeeData.isManager)? true : false; 
+   for (let key in employeeData ) { 
+        if (employeeData[key] === "") {
+            employeeData[key] = null;
+        }      
+    }         
     return new Promise(function (resolve, reject) {
         sequelize.sync()
         .then(()=> {
+            console.log("Sync was successful, employeeData to add is:  XXXX");
+            console.log(employeeData);
             Employee.create({
                 firstName: employeeData.firstName,
                 lastName: employeeData.lastName,
@@ -148,10 +156,13 @@ module.exports.addEmployee = function(employeeData) {
                 isManager:  employeeData.isManager,
                 employeeManagerNum: employeeData.employeeManagerNum,
                 status: employeeData.status,
+                department: employeeData.department,
                 hireDate: employeeData.hireDate
-            }).then(() => {            
+            }).then(() => { 
+                console.log("resolved with employee created sucessfully");           
                 resolve("employee created sucessfully");
             }).catch(() => {
+                console.log("rejected with unable to create employee"); 
                 reject("unable to create employee");
             });        
         }).catch(() => {
@@ -221,15 +232,18 @@ module.exports.getEmployeesByManager = function(manager) {
 
 // getEmployeesByNum ** REVISED DB **** A5
 module.exports.getEmployeeByNum = function(num) {
-    editNum = num; // stores which employeeNum is being currently recalled (for use if employee is edited)
+    editNum = num;
+    console.log("$$$$$$$ getEmployeeByNum, and num is: " + num + "  $$$$$$$$$");
     return new Promise(function (resolve, reject) {
         sequelize.sync()
         .then(()=> {
-            Employee.findAll({ // implies limit 1
+            console.log("we still have the nuuuuuuuuuuuum: " + num);
+            Employee.findOne({
                 where: {
                     employeeNum: num
                 }
             }).then((employee) => {
+                console.log("----eeeeeeeeeeeee   employee for the queried number is eeeeeeeeeeeeeeeeeeee:" + employee.firstName + " !!");
                 resolve(employee);
             }).catch(() => {
                 reject("no results returned");
@@ -242,15 +256,19 @@ module.exports.getEmployeeByNum = function(num) {
 
 // updateEmployee ** REVISED DB **** A5
 module.exports.updateEmployee = function(employeeData) {
-    employeeData.isManager = (employeeData.isManager) ? true : false; // ensures that even empty data (i.e. "") is in boolean terms
-    for (let property in employeeData ) { // ensures that legitimately empty fields are "null"
-        if (property == "") {
-            property = null;
-        }
-    }
+    console.log(" ((((((((((((((((  Called updateEmployee()  )))))))))))))))))))))))))))))))) with data: ");
+    console.log(employeeData);
+    employeeData.isManager = (employeeData.isManager)? true : false; 
+    for (let key in employeeData ) { 
+         if (employeeData[key] === "") {
+             employeeData[key] = null;
+         }      
+     }  
     return new Promise(function (resolve, reject) {
         sequelize.sync()
         .then(() => {
+            console.log("(((((((((((( inside updateEmployee, the data is:  ");
+            console.log(employeeData);
             Employee.update({
                 firstName: employeeData.firstName,
                 lastName: employeeData.lastName,
@@ -263,6 +281,7 @@ module.exports.updateEmployee = function(employeeData) {
                 isManager:  employeeData.isManager,
                 employeeManagerNum: employeeData.employeeManagerNum,
                 status: employeeData.status,
+                department: employeeData.department,
                 hireDate: employeeData.hireDate
                 }, {
                 where: {employeeNum: editNum}     
@@ -279,10 +298,10 @@ module.exports.updateEmployee = function(employeeData) {
 
 // addDepartment ** NEW **** A5
 module.exports.addDepartment = function(department) {
-    department.isManager = (department.isManager) ? true : false; // ensures that even empty data (i.e. "") is in boolean terms
-    for (let property in department ) { // ensures that legitimately empty fields are "null"
-        if (property == "") {
-            property = null;
+    department.isManager = (department.isManager) ? true : false; 
+    for (let key in department ) { 
+        if (department[key] === "") {
+            department[key] = null;
         }
     }
     return new Promise(function (resolve, reject) {
@@ -301,41 +320,14 @@ module.exports.addDepartment = function(department) {
     });
 }
 
-// updateDepartment ** NEW **** A5
-module.exports.updateDepartment = function(department) {
-    department.isManager = (department.isManager) ? true : false; // ensures that even empty data (i.e. "") is in boolean terms
-    for (let property in department ) { // ensures that legitimately empty fields are "null"
-        if (property == "") {
-            property = null;
-        }
-    }
-    return new Promise(function (resolve, reject) {
-        sequelize.sync()
-        .then(() => {
-            Department.update({
-                departmentName: department.departmentName
-            }, {
-                where: {
-                    departmentId: department.departmentId
-                }
-            }).then(() => {
-                resolve("department updated sucessfully");
-            }).catch(() => {
-                reject("unable to update department");      
-            });
-        }).catch(() => {
-            console.log("something went wrong");
-        }); 
-    });
-}
-
 // getDepartmentByID ** NEW **** A5
 module.exports.getDepartmentById = function(num) {
-    editNum = num; // stores which departent is being currently recalled (for use if employee is edited)
+    editDep = num;
+    console.log("$$$$$$$ getDepartmentById, and num is: " + num + "  $$$$$$$$$");
     return new Promise(function (resolve, reject) {
         sequelize.sync()
         .then(()=> {
-            Department.findAll({
+            Department.findOne({
                 where: {
                     departmentId: num
                 }
@@ -350,9 +342,39 @@ module.exports.getDepartmentById = function(num) {
     });
 }
 
+// updateDepartment ** NEW **** A5
+module.exports.updateDepartment = function(department) {
+    department.isManager = (department.isManager) ? true : false; 
+    for (let key in department ) { 
+        if (department[key] === "") {
+            department[key] = null;
+        }
+    }
+    return new Promise(function (resolve, reject) {
+        sequelize.sync()
+        .then(() => {
+            Department.update({
+                departmentName: department.departmentName
+            }, {
+                where: {
+                    departmentId: editDep
+                }
+            }).then(() => {
+                resolve("department updated sucessfully");
+            }).catch(() => {
+                reject("unable to update department");      
+            });
+        }).catch(() => {
+            console.log("something went wrong");
+        }); 
+    });
+}
+
+
+
 // deleteDepartmentById ** NEW **** A5
 module.exports.deleteDepartmentById = function(num) {
-    editNum = num; // stores which departent is being currently recalled (for use if employee is edited)
+    console.log("*************  Deleting Department with Id Number: " + num + "****************");   
     return new Promise(function (resolve, reject) {
         sequelize.sync()
         .then(()=> {
@@ -373,7 +395,7 @@ module.exports.deleteDepartmentById = function(num) {
 
 // deleteEmployeeByNum 
 module.exports.deleteEmployeeByNum = function(num) {
-    editNum = num; // stores which departent is being currently recalled (for use if employee is edited)
+    console.log("*************  Deleting employee with Id Number: " + num + "****************");
     return new Promise(function (resolve, reject) {
         sequelize.sync()
         .then(()=> {
@@ -391,3 +413,4 @@ module.exports.deleteEmployeeByNum = function(num) {
         });
     });
 }
+
