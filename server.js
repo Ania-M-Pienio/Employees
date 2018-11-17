@@ -4,9 +4,9 @@
 *  No part of this assignment has been copied manually or electronically from any other source
 *  (including web sites) or distributed to other students.
 * 
-*  Name: Ania M. Pienio  Student ID: 041780073 Date: November 15, 2018
+*  Name: Ania M. Pienio  Student ID: 041780073 Date: November 17, 2018
 *
-*  Online (Heroku) Link:  
+*  Online (Heroku) Link:  https://afternoon-reaches-72040.herokuapp.com/
 *
 ********************************************************************************/ 
 
@@ -106,10 +106,27 @@ app.get("/departments/add", (req, res) => {
      });
  });
 
-app.get("/employees/:status?/:department?/:manager?", (req, res) => {
+ app.get("/employees/delete/:empNum", (req, res) => {
+    //console.log("DDDDDDDDDDDDDDDDDDDD    Delete Employee by Id Number:" + req.params.empNum + " DDDDDDDDDDDDDDDD!");
+    dataService.deleteEmployeeByNum(req.params.empNum)
+    .then(() => {
+        res.redirect("/employees");          
+    }).catch(() => {
+        res.status(500).send("Unable to Remove Employee / Employee not found");
+    });
+});
+
+app.get("/employees/:status?/:department?/:manager?/", (req, res) => {
+    //console.log("???????????????????????????    Optional Queries Route:  ?????????????????????????????");
     const STATUS = req.query.status;
     const DEPARTMENT = req.query.department;
     const MANAGER = req.query.manager;
+    /*
+    console.log( req.query.status);
+    console.log(req.query.department);
+    console.log(req.query.manager);
+    console.log(req+  "---------------------------------------end-------------------------------------" + res.arguments);
+    */
     ////// if status
     if (STATUS) {
         dataService.getEmployeesByStatus(STATUS).then((employeesByStatus) => {
@@ -177,6 +194,8 @@ app.get("/employees/:status?/:department?/:manager?", (req, res) => {
     }    
 });
 
+
+
 app.get("/employee/:value", (req, res) => {
     //console.log("/employee/:value =" + req.params.value + " !");
     let viewData = {}; // empty object
@@ -239,13 +258,13 @@ app.get("/departments", (req, res) => {
 
 
 app.get("/department/:departmentId", (req, res) => {
-    console.log( " ROOOOOOOOOOOOOOOOOOT /department/:departmentId, with an id of:  ");
+    //console.log( " ROOOOOOOOOOOOOOOOOOT /department/:departmentId, with an id of:  ");
     console.log(req.params.departmentId);
     dataService.getDepartmentById(req.params.departmentId)
     .then((department) => {
         if (department) {
-            console.log( " RETUUUUUUUUUUURN FROM ROOT with department name:  ");
-            console.log(department.departmentName);
+            //console.log( " RETUUUUUUUUUUURN FROM ROOT with department name:  ");
+            //console.log(department.departmentName);
             res.render("department", {            
                 department: department,
                 defaultLayout: true
@@ -267,15 +286,7 @@ app.get("/departments/delete/:departmentId", (req, res) => {
     });
 });
 
-app.get("/employees/delete/:employeeNum", (req, res) => {
-    console.log("Delete Employee by Id Number:" + req.params.employeeNum + "!");
-    dataService.deleteEmployeeByNum(req.params.employeeNum)
-    .then(() => {
-        res.redirect("/employees");          
-    }).catch(() => {
-        res.status(500).send("Unable to Remove Employee / Employee not found");
-    });
-});
+
 
 const storage = multer.diskStorage({
     destination: "./public/images/uploaded",
