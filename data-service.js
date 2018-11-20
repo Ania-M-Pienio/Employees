@@ -95,7 +95,7 @@ module.exports.initialize = function() {
 
 //getAllEmployees() ** REVISED DB **** A5
 module.exports.getAllEmployees = function() {
-    console.log("%%%%%%%%  Called getAllEmployees()  %%%%%%%%%%");
+    //console.log("%%%%%%%%  Called getAllEmployees()  %%%%%%%%%%");
     return new Promise(function (resolve, reject) {
         sequelize.sync()
         .then(()=> {
@@ -113,7 +113,7 @@ module.exports.getAllEmployees = function() {
 
 //getDepartments() ** REVISED DB **** A5 
 module.exports.getDepartments = function() {
-    console.log("%%%%%%%%  Called getDepartments()  %%%%%%%%%%");
+    //console.log("%%%%%%%%  Called getDepartments()  %%%%%%%%%%");
     return new Promise(function (resolve, reject) {
         sequelize.sync()
         .then(()=> {
@@ -131,7 +131,7 @@ module.exports.getDepartments = function() {
 
 //addEmployee() 
 module.exports.addEmployee = function(employeeData) {
-    console.log(" ++++++++++++  Called AddEmployee() wiht department = :" + employeeData.department + "     +++++++++++");
+    //console.log(" ++++++++++++  Called AddEmployee() wiht department = :" + employeeData.department + "     +++++++++++");
    employeeData.isManager = (employeeData.isManager)? true : false; 
    for (let key in employeeData ) { 
         if (employeeData[key] === "") {
@@ -141,7 +141,7 @@ module.exports.addEmployee = function(employeeData) {
     return new Promise(function (resolve, reject) {
         sequelize.sync()
         .then(()=> {
-            console.log("Sync was successful, employeeData to add is:  XXXX");
+            //console.log("Sync was successful, employeeData to add is:  XXXX");
             console.log(employeeData);
             Employee.create({
                 firstName: employeeData.firstName,
@@ -159,10 +159,10 @@ module.exports.addEmployee = function(employeeData) {
                 department: employeeData.department,
                 hireDate: employeeData.hireDate
             }).then(() => { 
-                console.log("resolved with employee created sucessfully");           
+                //console.log("resolved with employee created sucessfully");           
                 resolve("employee created sucessfully");
             }).catch(() => {
-                console.log("rejected with unable to create employee"); 
+                //console.log("rejected with unable to create employee"); 
                 reject("unable to create employee");
             });        
         }).catch(() => {
@@ -233,17 +233,17 @@ module.exports.getEmployeesByManager = function(manager) {
 // getEmployeesByNum ** REVISED DB **** A5
 module.exports.getEmployeeByNum = function(num) {
     editNum = num;
-    console.log("$$$$$$$ getEmployeeByNum, and num is: " + num + "  $$$$$$$$$");
+    //console.log("$$$$$$$ getEmployeeByNum, and num is: " + num + "  $$$$$$$$$");
     return new Promise(function (resolve, reject) {
         sequelize.sync()
         .then(()=> {
-            console.log("we still have the nuuuuuuuuuuuum: " + num);
+            //console.log("we still have the nuuuuuuuuuuuum: " + num);
             Employee.findOne({
                 where: {
                     employeeNum: num
                 }
             }).then((employee) => {
-                console.log("----eeeeeeeeeeeee   employee for the queried number is eeeeeeeeeeeeeeeeeeee:" + employee.firstName + " !!");
+                //console.log("----eeeeeeeeeeeee   employee for the queried number is eeeeeeeeeeeeeeeeeeee:" + employee.firstName + " !!");
                 resolve(employee);
             }).catch(() => {
                 reject("no results returned");
@@ -256,8 +256,8 @@ module.exports.getEmployeeByNum = function(num) {
 
 // updateEmployee ** REVISED DB **** A5
 module.exports.updateEmployee = function(employeeData) {
-    console.log(" ((((((((((((((((  Called updateEmployee()  )))))))))))))))))))))))))))))))) with data: ");
-    console.log(employeeData);
+    //console.log(" ((((((((((((((((  Called updateEmployee()  )))))))))))))))))))))))))))))))) with data: ");
+    //console.log(employeeData);
     employeeData.isManager = (employeeData.isManager)? true : false; 
     for (let key in employeeData ) { 
          if (employeeData[key] === "") {
@@ -267,7 +267,7 @@ module.exports.updateEmployee = function(employeeData) {
     return new Promise(function (resolve, reject) {
         sequelize.sync()
         .then(() => {
-            console.log("(((((((((((( inside updateEmployee, the data is:  ");
+            //console.log("(((((((((((( inside updateEmployee, the data is:  ");
             console.log(employeeData);
             Employee.update({
                 firstName: employeeData.firstName,
@@ -323,7 +323,7 @@ module.exports.addDepartment = function(department) {
 // getDepartmentByID ** NEW **** A5
 module.exports.getDepartmentById = function(num) {
     editDep = num;
-    console.log("$$$$$$$ getDepartmentById, and num is: " + num + "  $$$$$$$$$");
+    //console.log("$$$$$$$ getDepartmentById, and num is: " + num + "  $$$$$$$$$");
     return new Promise(function (resolve, reject) {
         sequelize.sync()
         .then(()=> {
@@ -374,7 +374,7 @@ module.exports.updateDepartment = function(department) {
 
 // deleteDepartmentById ** NEW **** A5
 module.exports.deleteDepartmentById = function(num) {
-    console.log("*************  Deleting Department with Id Number: " + num + "****************");   
+    //console.log("*************  Deleting Department with Id Number: " + num + "****************");   
     return new Promise(function (resolve, reject) {
         sequelize.sync()
         .then(()=> {
@@ -395,7 +395,7 @@ module.exports.deleteDepartmentById = function(num) {
 
 // deleteEmployeeByNum 
 module.exports.deleteEmployeeByNum = function(num) {
-    console.log("*************  Deleting employee with Id Number: " + num + "****************");
+    //console.log("*************  Deleting employee with Id Number: " + num + "****************");
     return new Promise(function (resolve, reject) {
         sequelize.sync()
         .then(()=> {
