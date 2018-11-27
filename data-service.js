@@ -6,7 +6,7 @@ let editDep = "";
 
 const Sequelize = require("sequelize");
 
-var sequelize = new Sequelize("d5ev5hqmr5ct5a", "ujeibmbnulivdy", 
+let sequelize = new Sequelize("d5ev5hqmr5ct5a", "ujeibmbnulivdy", 
 "ad6b5d384415c26a40c1ed381ca9ed9b44cb25ca0eac59e616e55b678da6a31a", {
     host: "ec2-54-235-193-0.compute-1.amazonaws.com",
     dialect: "postgres",
@@ -17,7 +17,7 @@ var sequelize = new Sequelize("d5ev5hqmr5ct5a", "ujeibmbnulivdy",
     operatorsAliases: false
 });
 
-/*
+
 sequelize
     .authenticate()
     .then(function() {
@@ -26,7 +26,6 @@ sequelize
     .catch(function(err) {
         console.log("Unable to connect to the database:", err);
     });
-*/
 
 var Employee = sequelize.define("Employee", {
     employeeNum: {
@@ -142,7 +141,7 @@ module.exports.addEmployee = function(employeeData) {
         sequelize.sync()
         .then(()=> {
             //console.log("Sync was successful, employeeData to add is:  XXXX");
-            console.log(employeeData);
+            //console.log(employeeData);
             Employee.create({
                 firstName: employeeData.firstName,
                 lastName: employeeData.lastName,

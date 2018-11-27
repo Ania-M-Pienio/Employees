@@ -1,19 +1,20 @@
 /*********************************************************************************
-*  WEB322 – Assignment 05
+*  WEB322 – Assignment 06
 *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  
 *  No part of this assignment has been copied manually or electronically from any other source
 *  (including web sites) or distributed to other students.
 * 
-*  Name: Ania M. Pienio  Student ID: 041780073 Date: November 17, 2018
+*  Name: Ania M. Pienio  Student ID: 041780073 Date: November 26, 2018
 *
-*  Online (Heroku) Link:  https://afternoon-reaches-72040.herokuapp.com/
+*  Online (Heroku) Link:  
 *
 ********************************************************************************/ 
 
 const HTTP_PORT = process.env.PORT || 8081;
 const express = require("express");
 const path = require("path");
-var dataService = require("./data-service")
+var dataService = require("./data-service");
+var dataServiceAuth = require("./data-service-auth");
 const app = express();
 const multer = require("multer");
 const fs = require("fs");
@@ -346,9 +347,13 @@ app.all("*", (req, res)=>{
 });
 
 dataService.initialize()
-    .then( (MsgOk) => {
-        console.log(MsgOk);
-        app.listen(HTTP_PORT); 
-    }).catch((MsnNoGo) => {
-        console.log(MsgNoGo);
+    .then(
+        dataServiceAuth.initialize
+    )
+    .then(() => {
+        app.listen(HTTP_PORT, () => {
+            console.log("app listening on: " + HTTP_PORT);
+        }); 
+    }).catch((err) => {
+        console.log("Unable to start server" + err);
 });
