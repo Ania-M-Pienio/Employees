@@ -20,6 +20,7 @@ const multer = require("multer");
 const fs = require("fs");
 const bodyParser = require("body-parser");
 const exphbs = require("express-handlebars");
+const clientSession = require("client-sessions")
 
 app.engine('.hbs', exphbs({ 
     extname: '.hbs', 
@@ -45,6 +46,18 @@ app.engine('.hbs', exphbs({
 app.set('view engine', '.hbs');
 
 app.use(express.static('public'));
+
+app.use(clientSessions({
+    cookieName: "session",
+    secret: "CrosslandAffair",
+    duration: 2 * 60 * 1000,
+    activeDuration: 1000 * 60
+}));
+
+app.use(function(req, res, next) {
+    res.locals.session = req.session;
+    next();
+});
 
 app.use(bodyParser.urlencoded({extended: true}));
 
