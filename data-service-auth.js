@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const bcrypt = require("bcryptjs");
 
 /*[ 1 ]*/ //CREATE SCHEMA
 var userSchema = new Schema ({
@@ -14,7 +15,7 @@ var userSchema = new Schema ({
         "dateTime": Date,
         "userAgent": String
     }]
-  })
+  });
 
 let User;  // *[ 2 ]* // CREATE EMPTY OBJECT CALLED USER
 
@@ -41,14 +42,17 @@ module.exports.initialize = function() {
 } // end of function
 
 
-
 // registerUser()
 module.exports.registerUser = function(userData) {
     return new Promise ((resolve, reject) => {
         if (userData.password != userData.password2) {
             reject("Passwords do not match");
         } else {
-            let newUser = new User(userData);
+            let newUser = new User({
+                "userName": userData.userName,
+                "password": userData.password,
+                "email": userData.email        
+            });
             newUser.save((err) => {
                 if(err == 11000) { // 11000 = duplicate key
                     reject("User Name already taken");
@@ -65,27 +69,38 @@ module.exports.registerUser = function(userData) {
 
 // checkUser()
 module.exports.checkUser = function(userData) {
+    console.log(" --------- checkUser -----------------");
+    console.log(" ----- userData --------");
+    console.log(userData);
     return new Promise ((resolve, reject) => {
-         User.find({userName: userData.userName})
+         User.findOne({
+             userName: userData.userName
+        })
         .exec()
-        .then((users) => {
-            if (!users.size()) {
-                reject("Unable to find user: " + userData.userName);
-            } else if (userData.password != users[0].password) {
+        .then((results) => {
+            console.log(" --------- checkUser + THEN -----------------");
+            console.log(" ----- results --------");
+            console.log(results);
+            if (results.userName.length == 0) {
+                console.log(" --------- checkUser + THEN + no users returned -----------------");
+                reject("Unable to find user: " + userData.userName);                
+            } else if (userData.password != results.password) {
+                console.log(" --------- checkUser + THEN + password no good -----------------");
                 reject("Incorrect Password for user: " + userData.userName);
             } else {
-                users[0].loginHistory.push({
+                console.log(" --------- checkUser + THEN + HistoryPush -----------------");
+                results.loginHistory.push({
                     dateTime: (new Date()).toString(), 
                     userAgent: userData.userAgent                       
                 });
-                User.updateOne({
-                    userName: userData[0].userName
-                }, {
-                    $set: { loginHistory: users[0].loginHistory }
-                })
+                console.log("----- loginHistory -----")
+                console.log(results.loginHistory);
+                User.updateOne({ userName: userData.userName }, 
+                    { $set: { loginHistory: results.loginHistory }})
                 .exec()
                 .then(() => {
-                    resolve(users[0]);
+                    console.log("----- resolved updateOne -----");
+                    resolve(results);
                 })
                 .catch(() => {
                     reject("There was an error verifying the user: " + userData.userName);
@@ -93,7 +108,8 @@ module.exports.checkUser = function(userData) {
             } // end of else1
         })
         .catch((err) => {
-            reject("Unable to find user: " + userData.userName)
+            console.log(" --------- checkUser + CATCH -----------------");
+            reject("Unable to find user: " + userData.userName + err)
         }); //end of findOne   
     }); // end of promise
 } // end of function
