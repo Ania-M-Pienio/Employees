@@ -41,24 +41,28 @@ module.exports.initialize = function() {
     }); // end of promise
 } // end of function
 
-
 // registerUser()
 module.exports.registerUser = function(userData) {
     return new Promise ((resolve, reject) => {
         if (userData.password != userData.password2) {
+            console.log(" xxx  passwords don't match xxxx");
             reject("Passwords do not match");
-        } else {
+        } else {            
             let newUser = new User({
                 "userName": userData.userName,
                 "password": userData.password,
                 "email": userData.email        
             });
             newUser.save((err) => {
+                console.log(" xxx  newUser.save() xxxx");
                 if(err == 11000) { // 11000 = duplicate key
+                    console.log(" xxx  duplicate key xxxx");
                     reject("User Name already taken");
                 } else if (err) {
+                    console.log(" xxx  error creating user xxxx");
                     reject("There was an error creating the user: " + err);
                 } else {
+                    console.log(" xxx  user successful xxxx");
                     resolve();
                 } // else 2
             }); //  end of save newUser
@@ -81,12 +85,12 @@ module.exports.checkUser = function(userData) {
             console.log(" --------- checkUser + THEN -----------------");
             console.log(" ----- results --------");
             console.log(results);
-            if (results.userName.length == 0) {
+            if (!results) {
                 console.log(" --------- checkUser + THEN + no users returned -----------------");
-                reject("Unable to find user: " + userData.userName);                
+                reject(" Unable to find user: " + userData.userName);                
             } else if (userData.password != results.password) {
                 console.log(" --------- checkUser + THEN + password no good -----------------");
-                reject("Incorrect Password for user: " + userData.userName);
+                reject(" Incorrect Password for user: " + userData.userName);
             } else {
                 console.log(" --------- checkUser + THEN + HistoryPush -----------------");
                 results.loginHistory.push({
@@ -103,13 +107,13 @@ module.exports.checkUser = function(userData) {
                     resolve(results);
                 })
                 .catch(() => {
-                    reject("There was an error verifying the user: " + userData.userName);
+                    reject(" There was an error verifying the user: " + userData.userName);
                 }); // end of updateOne
             } // end of else1
         })
         .catch((err) => {
             console.log(" --------- checkUser + CATCH -----------------");
-            reject("Unable to find user: " + userData.userName + err)
+            reject(err);
         }); //end of findOne   
     }); // end of promise
 } // end of function

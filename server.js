@@ -22,6 +22,13 @@ const bodyParser = require("body-parser");
 const exphbs = require("express-handlebars");
 const clientSession = require("client-sessions")
 
+const storage = multer.diskStorage({
+    destination: "./public/images/uploaded",
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+const upload = multer({storage: storage});
 app.engine('.hbs', exphbs({ 
     extname: '.hbs', 
     defaultLayout: "main",
@@ -103,19 +110,19 @@ app.get("/departments/add", ensureLogin, (req, res) => {
     });
 });
 
- app.get("/images/add", ensureLogin, (req, res) => {
-    res.render("addImage", {
-        defaultLayout: true
-    });
- });
-
- app.get("/images", (req, res) => {
-     fs.readdir("./public/images/uploaded", ensureLogin, (err, items) => {
+ app.get("/images", ensureLogin, (req, res) => {
+     fs.readdir("./public/images/uploaded", (err, items) => {
          res.render("images", {
              data: items,
              defaultLayout: true
             });         
      });
+ });
+
+ app.get("/images/add", ensureLogin, (req, res) => {
+    res.render("addImage", {
+        defaultLayout: true
+    });
  });
 
  app.get("/employees/delete/:empNum", ensureLogin, (req, res) => {
@@ -302,13 +309,7 @@ app.get("/register", (req, res) => {
 });
 
 ////////////////////////  POST ////////////////////////////////////////////////////////////
-const storage = multer.diskStorage({
-    destination: "./public/images/uploaded",
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
-const upload = multer({storage: storage});
+
 
 app.post("/employee/update", ensureLogin, (req, res) => {
     dataService.updateEmployee(req.body)
@@ -367,7 +368,8 @@ app.post("/login", (req, res) => {
     .catch((err) => {
         console.log(" POST /login + CATCH ------------------------ > ------>");
         res.render("login.hbs", {
-            defaultLayout: true
+            defaultLayout: true,
+            errorMessage: err
         });
     });
 });
@@ -375,16 +377,17 @@ app.post("/login", (req, res) => {
 app.post("/register", (req, res) => {
     console.log(" POST /register ------------------------ > ------>");
     dataServiceAuth.registerUser(req.body).then(() => {
+        console.log(" POST /register ------ + THEN ------------------ > ------>");
         res.render("register", {
             defaultLayout: true,
             successMessage: "User created"
         });
     })
     .catch((err) => {
+        console.log(" POST /register ------+ CATCH ------------------ > ------>");
         res.render("register", {
             defaultLayout: true,
-            erroMessage: err,
-            userName: req.body.userName
+            errorMessage: err            
         });
     });
 });
@@ -409,7 +412,7 @@ dataService.initialize()
 });
 
 function ensureLogin (req, res, next) {
-    if (!req.session.user.userName) {
+    if (!req.session.user) {
         res.redirect("/login");
     } else {
         next();

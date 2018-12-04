@@ -1,1 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Shadows+Into+Light+Two');
+
+.navbar navbar-default {
+    font-family: 'Vast Shadow', cursive;
+    color: #142f5b;
+    background: #e5d9f4;
+ }
