@@ -369,8 +369,6 @@ module.exports.updateDepartment = function(department) {
     });
 }
 
-
-
 // deleteDepartmentById ** NEW **** A5
 module.exports.deleteDepartmentById = function(num) {
     //console.log("*************  Deleting Department with Id Number: " + num + "****************");   
