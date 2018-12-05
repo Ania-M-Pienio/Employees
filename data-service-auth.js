@@ -49,8 +49,8 @@ module.exports.registerUser = function(userData) {
             reject("Passwords do not match");
         } else {
        
-            bcrypt.genSalt(10, (err, salt) => {
-                bcrypt.hash(userData.password, salt, (err, hash) => {
+            bcrypt.genSalt(10, (err, salt) => { // bycrypt 1
+                bcrypt.hash(userData.password, salt, (err, hash) => { // bycrypt 2
                     if (err) { 
                         reject("There was a problem encrypting password");
                     } else { // 2A
