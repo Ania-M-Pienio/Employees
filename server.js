@@ -217,7 +217,9 @@ app.get("/employee/:value", ensureLogin, (req, res) => {
         }
     }).catch(() => {
         viewData.employee = null; // set employee to null if there was an error
-    }).then(dataService.getDepartments).then((theDepartments) => {
+    })
+    .then(dataService.getDepartments)
+    .then((theDepartments) => {
             viewData.departments = theDepartments; // store department data in the "viewData" object as "departments"
             for (let i = 0; i < viewData.departments.length; i++) {
                  if (viewData.departments[i].departmentId == viewData.employee.department) {
@@ -376,7 +378,8 @@ app.post("/login", (req, res) => {
 
 app.post("/register", (req, res) => {
     console.log(" POST /register ------------------------ > ------>");
-    dataServiceAuth.registerUser(req.body).then(() => {
+    dataServiceAuth.registerUser(req.body)
+    .then(() => {
         console.log(" POST /register ------ + THEN ------------------ > ------>");
         res.render("register", {
             defaultLayout: true,
