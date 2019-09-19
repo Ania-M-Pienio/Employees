@@ -1,4 +1,5 @@
-(picture of app)
+![GitHub Logo](https://github.com/Ania-M-Pienio/Teams/blob/master/public/images/readme/EmployeesApp.PNG)
+Format: ![Alt Text](url)
 
 ## `Express and NPM`
 
