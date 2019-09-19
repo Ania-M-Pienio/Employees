@@ -1,15 +1,3 @@
-/*********************************************************************************
-*  WEB322 – Assignment 06
-*  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  
-*  No part of this assignment has been copied manually or electronically from any other source
-*  (including web sites) or distributed to other students.
-* 
-*  Name: Ania M. Pienio  Student ID: 041780073 Date: December 4, 2018
-*
-*  Online (Heroku) Link:   https://arcane-reaches-99602.herokuapp.com/
-*
-********************************************************************************/ 
-
 const HTTP_PORT = process.env.PORT || 8081;
 const express = require("express");
 const path = require("path");

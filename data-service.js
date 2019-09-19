@@ -6,9 +6,9 @@ let editDep = "";
 
 const Sequelize = require("sequelize");
 
-let sequelize = new Sequelize("d5ev5hqmr5ct5a", "ujeibmbnulivdy", 
-"ad6b5d384415c26a40c1ed381ca9ed9b44cb25ca0eac59e616e55b678da6a31a", {
-    host: "ec2-54-235-193-0.compute-1.amazonaws.com",
+let sequelize = new Sequelize("dveac79b0erjt", "ujmhsyssbtsjjr", 
+"11e5b6d9253ded7b5fac7211f86ae17f36a0f0b988e92ded2788eff91a4f5c03", {
+    host: "ec2-54-235-100-99.compute-1.amazonaws.com",
     dialect: "postgres",
     port: 5432,
     dialectOptions: {
