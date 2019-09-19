@@ -23,7 +23,8 @@ One of the templating engines supported by Express is Handlebars (a Mustache tem
 
 On the client-side, user still receives valid HTML5 pages which are actually assembled on the back-end with complex portions that are used and re-used as needed.  Helpers, such as "each", "unless", "for-each" are used to conditionally render sections and data in each template. Custom-made helpers such as navLink and equal are created to render links and to quickly evaluate equality between propperties. 
 
-(picture Handlebars)
+![GitHub Logo](https://github.com/Ania-M-Pienio/Employees/blob/master/public/images/readme/handlebars.png)
+Format: ![Alt Text](url)
 
 ## `Database Support`
 
