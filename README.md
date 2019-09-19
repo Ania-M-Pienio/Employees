@@ -32,4 +32,5 @@ The fully atomic PostgresSQL system was selected for persiting the Employee and 
 
 Registered User information is stored using a non-sql system (MongoDB) with Mongoose as the Object Data Modelling (ODM) needed to communicate with the Mongo driver.
 
-(picture Postgres and Mongodb )
+![GitHub Logo](https://github.com/Ania-M-Pienio/Employees/blob/master/public/images/readme/databases.png)
+Format: ![Alt Text](url)
