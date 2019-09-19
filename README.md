@@ -12,7 +12,8 @@ Among the dependenices installed using NPM, these are the main ones:
    multer:      file uploading
    bodyParser:  extracting content from HTTP requests 
 
-(picture Express)
+![GitHub Logo](https://github.com/Ania-M-Pienio/Employees/blob/master/public/images/readme/expressjs.png)
+Format: ![Alt Text](url)
 
 ## `Templates using Handlebars`
 
