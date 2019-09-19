@@ -35,4 +35,4 @@ Registered User information is stored using a non-sql system (MongoDB) with Mong
 ![GitHub Logo](https://github.com/Ania-M-Pienio/Employees/blob/master/public/images/readme/databases.png)
 Format: ![Alt Text](url)
 
-Deployed Version located at: https://employees-serve.herokuapp.com/
+## `Deployed Version` located at: https://employees-serve.herokuapp.com/
