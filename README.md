@@ -3,7 +3,7 @@ Format: ![Alt Text](url)
 
 ## `Express and NPM`
 
-Open-source Express is the ideal framework to construct a simple and fast portal-server without digging into the underlying world of http header content. Middleware functions server to pre-process requests before they are handed over to the specific routes.
+Open-source Express is the ideal framework to construct a simple and fast portal-server without digging into the underlying world of http header content. Middleware functions serve to pre-process requests before they are handed over to the specific routes.
 
 Among the dependenices installed using NPM, these are the main ones: 
 
