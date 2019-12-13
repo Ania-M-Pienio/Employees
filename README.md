@@ -17,7 +17,7 @@ Format: ![Alt Text](url)
 
 ## `Templates using Handlebars`
 
-One of the templating engines supported by Express is Handlebars (a Mustache templating language). The templates are served in responsive to the specific route(s) built by Express. The utility is installed using Node Package Manager and imported using 'require' in server.js.  
+One of the templating engines supported by Express is Handlebars (a Mustache templating language). The templates are served in response to the specific route(s) built by Express. The utility is installed using Node Package Manager and imported using 'require' in server.js.  
 
     const exphbs = require('express-handlebars')";
 
